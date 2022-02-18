@@ -1,0 +1,51 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Type {
+  Banner
+}
+
+model Banner {
+  id        Int      @id @default(autoincrement())
+  type      Type
+  title     String
+  link      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([type, title])
+  @@map("banner")
+}
+
+enum Status {
+  Enabled
+  Disabled
+  Deleted
+}
+
+enum Gender {
+  Male
+  Famale
+  Unknown
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String
+  password  String
+  mobile    String?
+  status    Status   @default(Enabled)
+  realname  String?
+  gender    Gender   @default(Unknown)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([username, realname])
+  @@map("user")
+}
