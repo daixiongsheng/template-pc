@@ -1,88 +1,79 @@
-import React, { Suspense } from 'react';
-import { Navigate, Outlet, Route } from 'react-router-dom';
+import React, { Suspense } from 'react'
+import { Navigate, RouteObject } from 'react-router-dom'
 
-export const LoadingComponent = () => {
-  return <div>loading</div>;
-};
+import Loading from './components/Loading'
 
-function load(component): React.FC {
-  const OtherComponent = React.lazy(component);
-
-  return () => (
-    <Suspense fallback={<LoadingComponent />}>
+function load(component): React.ReactElement {
+  const OtherComponent = React.lazy(component)
+  const Node = () => (
+    <Suspense fallback={<Loading />}>
       <OtherComponent />
     </Suspense>
-  );
+  )
+  return React.createElement(Node)
 }
 
-export type RouteInfo = {
-  path: string;
-  component: React.FC;
-  meta?: any;
-  children?: RouteInfo[];
-};
-
-const adminRoutes: RouteInfo[] = [
+export const adminRoutes: RouteObject[] = [
   {
     path: 'dashboard',
-    component: load(() => import('./pages/dashboard')),
-    meta: {
-      title: '看板',
-    },
+    element: load(() => import('./pages/dashboard')),
     children: [
       {
-        path: 'dashboard',
-        component: load(() => import('./pages/dashboard')),
-        meta: {
-          title: '看板',
-        },
+        path: 'all',
+        element: load(() => import('./pages/dashboard')),
         children: [],
       },
     ],
   },
-];
+  {
+    path: 'member',
+    element: load(() => import('./pages/dashboard')),
+    children: [
+      {
+        path: 'info',
+        element: load(() => import('./pages/dashboard')),
+        children: [],
+      },
+      {
+        path: 'find',
+        element: load(() => import('./pages/dashboard')),
+        children: [],
+      },
+    ],
+  },
+  {
+    path: 'cache',
+    element: load(() => import('./pages/dashboard')),
+    children: [],
+  },
+]
 
-const routes: RouteInfo[] = [
+export const routes: RouteObject[] = [
   {
     path: '*',
-    component: () => <Navigate to="/" />,
+    element: <Navigate to="/" />,
   },
   {
     path: '/',
-    component: load(() => import('./pages/home')),
+    element: load(() => import('./pages/home')),
   },
   {
     path: '/admin',
-    component: () => <Navigate to="/admin/dashboard" />,
+    element: <Navigate to="/admin/dashboard" />,
   },
   {
     path: '/admin',
-    component: load(() => import('./components/Dashboard')),
+    element: load(() => import('./components/Dashboard')),
     children: adminRoutes,
   },
   {
     path: '/login',
-    component: load(() => import('./pages/login')),
+    element: load(() => import('./pages/login')),
   },
   {
-    path: 'about',
-    component: load(() => import('./pages/about')),
+    path: '/about',
+    element: load(() => import('./pages/about')),
   },
-];
+]
 
-export function renderRoutes(children: RouteInfo[] = []): React.ReactNode {
-  return children.map((route) => {
-    if (Array.isArray(route.children) && route.children.length > 0) {
-      return (
-        <Route key={route.path} path={route.path} element={<route.component />}>
-          {renderRoutes(route.children)}
-        </Route>
-      );
-    }
-    return (
-      <Route key={route.path} path={route.path} element={<route.component />} />
-    );
-  });
-}
-
-export default renderRoutes(routes);
+export default routes

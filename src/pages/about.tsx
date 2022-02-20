@@ -1,10 +1,9 @@
-import React from 'react';
+import React from 'react'
 
-export type AboutProps = {};
+export type AboutProps = {}
 
 const About: React.FC<AboutProps> = () => {
-  console.log('ffff');
-  return <div>About</div>;
-};
+  return <div>About</div>
+}
 
-export default About;
+export default About

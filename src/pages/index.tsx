@@ -1,18 +1,18 @@
-import React from 'react';
-import { useNavigate } from 'react-router';
+import React from 'react'
+import { useNavigate } from 'react-router'
 
-export type IndexProps = {};
+export type IndexProps = {}
 const Index: React.FC<IndexProps> = () => {
-  const navigator = useNavigate();
+  const navigator = useNavigate()
   return (
     <div
       onClick={(e) => {
-        navigator('/home');
+        navigator('/home')
       }}
     >
       Index
     </div>
-  );
-};
+  )
+}
 
-export default Index;
+export default Index

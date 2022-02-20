@@ -1,27 +1,24 @@
-import { Context } from '@midwayjs/rpc';
+import { Middleware } from '@midwayjs/rpc'
 
-export const handleRequest = async (ctx: Context, next: () => Promise<any>) => {
-  const token = localStorage.getItem('access_token');
+export const handleRequest: Middleware = async (ctx, next) => {
+  const token = localStorage.getItem('access_token')
   if (token) {
-    ctx.req.headers.token = token;
+    ctx.req.headers.token = token
   }
-  await next();
-};
+  await next()
+}
 
-export const handleResponse = async (
-  ctx: Context,
-  next: () => Promise<any>,
-) => {
-  await next();
+export const handleResponse: Middleware = async (ctx, next) => {
+  await next()
   if (ctx.req.url.includes('login')) {
-    const token = ctx.res.token;
+    const token = ctx.res.token
     if (token) {
-      localStorage.setItem('access_token', token);
+      localStorage.setItem('access_token', token)
     }
   }
   if (ctx.res.code !== 0) {
-    throw ctx.res.msg;
+    throw ctx.res.msg
   } else {
-    ctx.res = ctx.res.data;
+    ctx.res = ctx.res.data
   }
-};
+}

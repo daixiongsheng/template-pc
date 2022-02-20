@@ -1,6 +1,8 @@
-import { User as UserDto } from '@prisma/client';
+import { User } from '@prisma/client'
 
-export type User = Pick<
-  UserDto,
+export type UserInfo = Pick<
+  User,
   'id' | 'gender' | 'mobile' | 'realname' | 'username'
->;
+> & {
+  authPath: string[]
+}

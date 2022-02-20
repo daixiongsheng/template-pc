@@ -1,15 +1,20 @@
-import { createConfiguration, hooks, useContext } from '@midwayjs/hooks';
-import * as Koa from '@midwayjs/koa';
-import * as cache from '@midwayjs/cache';
-import * as redis from '@midwayjs/redis';
-import cors from '@koa/cors';
-import { join } from 'path';
-import logger from './middleware/logger';
-import error from './middleware/error';
-import koaJwt from 'koa-jwt';
-import config from './config/config.default';
+import { createConfiguration, hooks } from '@midwayjs/hooks'
+import * as Koa from '@midwayjs/koa'
+import * as cache from '@midwayjs/cache'
+import * as redis from '@midwayjs/redis'
+import * as swagger from '@midwayjs/swagger'
+import * as jwt from '@midwayjs/jwt'
+import * as task from '@midwayjs/task'
 
-import * as jwt from '@midwayjs/jwt';
+import cors from '@koa/cors'
+import koaJwt from 'koa-jwt'
+
+import { join } from 'path'
+import logger from './middleware/logger'
+import error from './middleware/error'
+import config from './config/config.default'
+import { HelloService } from './task'
+
 /**
  * setup midway server
  */
@@ -20,6 +25,12 @@ export default createConfiguration({
     redis,
     Koa,
     jwt,
+    swagger,
+    task,
+    // {
+    //   component: swagger,
+    //   enabledEnvironment: ['local'],
+    // },
     hooks({
       middleware: [
         logger,
@@ -30,6 +41,7 @@ export default createConfiguration({
             '/api/user/logout',
             /^\/public/,
             // '/api/user/create',
+            // '/api/task/create',
           ],
         }),
         cors({ origin: '*', credentials: true, keepHeadersOnError: true }),
@@ -40,20 +52,31 @@ export default createConfiguration({
     {
       default: {
         keys: 'session_keys',
+        midwayLogger: {
+          default: {
+            level: 'debug',
+          },
+        },
+        coreLogger: {
+          level: 'debug',
+        },
+        logger: {},
       },
     },
     join(__dirname, 'config'),
   ],
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   onReady(container, app): void {
-    console.log('onReady');
+    console.log('onReady')
   },
   onStop(container, app): void {
-    console.log('onStop');
+    console.log('onStop')
   },
   onConfigLoad(container, app): void {
-    console.log('onConfigLoad');
+    console.log('onConfigLoad')
   },
   onServerReady(container, app): void {
-    console.log('onServerReady');
+    console.log('onServerReady')
   },
-});
+  /* eslint-enable @typescript-eslint/no-unused-vars */
+})

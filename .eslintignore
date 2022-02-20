@@ -1,0 +1,13 @@
+dist
+lib
+.vscode
+.idea
+.Ds_Store
+package-lock.json
+yarn.lock
+# test
+package.json
+.babelrc
+coverage
+dist
+/index.html

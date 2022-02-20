@@ -1,8 +1,8 @@
-import React from 'react';
+import React from 'react'
 
-export type DashboardProps = {};
+export type DashboardProps = {}
 const Dashboard: React.FC<DashboardProps> = () => {
-  return <div>Dashboard</div>;
-};
+  return <div>Dashboard</div>
+}
 
-export default Dashboard;
+export default Dashboard

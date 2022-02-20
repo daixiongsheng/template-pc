@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
-import styled from 'styled-components';
-import { Form, Input, Button, message } from 'antd';
-import MyHeader from '../components/MyHeader';
-import { useTranslation } from 'react-i18next';
-import { login, logout } from '../api/user';
-import { useNavigate } from 'react-router';
+import React, { useEffect } from 'react'
+import styled from 'styled-components'
+import { Form, Input, Button, message } from 'antd'
+import MyHeader from '../components/MyHeader'
+import { useTranslation } from 'react-i18next'
+import { login, logout } from '../api/user'
+import { useLocation, useNavigate } from 'react-router'
+import { useSearchParams } from 'react-router-dom'
 
 const Layout = styled.div`
   position: relative;
@@ -14,28 +15,29 @@ const Layout = styled.div`
   padding: 94px 40px 40px 40px;
   height: 354px;
   margin-top: 40px;
-`;
+`
 
-const Title = styled.div``;
+const Title = styled.div``
 
-export type LoginProps = {};
+export type LoginProps = {}
 
 const Login = () => {
-  const { t } = useTranslation('login');
-  const to = useNavigate();
+  const { t } = useTranslation('login')
+  const to = useNavigate()
+  const [params] = useSearchParams()
   const onFinish = ({ username, password }: any) => {
     login(username, password)
       .then(() => {
-        to('/admin');
+        to(params.get('redirectUrl') || '/admin')
       })
-      .catch(message.error);
-  };
+      .catch(message.error)
+  }
   return (
     <>
       <MyHeader />
       <Title
         onClick={() => {
-          logout().then(console.log);
+          logout().then(console.log)
         }}
       >
         hello
@@ -74,7 +76,7 @@ const Login = () => {
         </Form>
       </Layout>
     </>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

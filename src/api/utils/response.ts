@@ -3,7 +3,7 @@ export function success<T extends any>(data: any = null, msg = 'ok'): T {
     data,
     code: 0,
     msg,
-  } as T;
+  } as T
 }
 
 export function error(msg: string, code = -1) {
@@ -11,9 +11,9 @@ export function error(msg: string, code = -1) {
     code,
     msg,
     data: null,
-  };
+  }
 }
 
 export function successPage(list, size, page, total) {
-  return success({ list, size, page, total });
+  return success({ list, size, page, total })
 }

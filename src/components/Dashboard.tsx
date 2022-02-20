@@ -1,44 +1,73 @@
-import { Layout, message } from 'antd';
-import Sider from 'antd/lib/layout/Sider';
-import React, { useContext, useEffect } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
-import { globalContext } from '../globalContext';
-import MenuBoard from './MenuBoard';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
+import { useToggle } from 'ahooks'
+import { Layout } from 'antd'
+import React, { useContext, useLayoutEffect } from 'react'
+import { Outlet, useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
 
-const { Content, Footer, Header } = Layout;
+import { globalContext } from '../globalContext'
+import Loading from './Loading'
+import MenuBoard from './MenuBoard'
 
-export type DashboardProps = {};
-// const Layout = styled.main``;
+const { Content, Footer, Header, Sider } = Layout
+
+export type DashboardProps = {}
+
+const Logo = styled.div`
+  height: 32px;
+  margin: 16px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
 const Dashboard: React.FC<DashboardProps> = () => {
-  const { loadUserInfo } = useContext(globalContext);
-  useEffect(() => {
+  const { user, loadUserInfo } = useContext(globalContext)
+  const [collapsed, { toggle }] = useToggle()
+  const to = useNavigate()
+  useLayoutEffect(() => {
     loadUserInfo()
       .then((user) => {
         if (!user) {
-          to('/login');
+          to('/login')
         }
       })
       .catch((e) => {
-        message.warning(e);
-        to('/login');
-      });
-  }, []);
-  const to = useNavigate();
+        to('/login')
+      })
+  }, [])
+  if (!user) {
+    return <Loading />
+  }
+
   return (
     <Layout>
-      <Header></Header>
+      <Sider
+        collapsible
+        trigger={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+        width="240"
+        theme="light"
+        collapsed={collapsed}
+        onCollapse={toggle}
+      >
+        <Logo>Logo</Logo>
+        <MenuBoard />
+      </Sider>
       <Layout>
-        <Sider>
-          <MenuBoard />
-        </Sider>
-        <Layout>
-          <Content>
-            <Outlet />
-          </Content>
-          <Footer>Footer</Footer>
-        </Layout>
+        <Header
+          style={{
+            background: '#fff',
+            paddingLeft: 0,
+          }}
+        ></Header>
+        <Content style={{ minHeight: '100vh' }}>
+          <Outlet />
+        </Content>
+        <Footer>Footer</Footer>
       </Layout>
     </Layout>
-  );
-};
-export default Dashboard;
+  )
+}
+
+export default Dashboard
