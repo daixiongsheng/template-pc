@@ -5,15 +5,14 @@ import * as redis from '@midwayjs/redis'
 import * as swagger from '@midwayjs/swagger'
 import * as jwt from '@midwayjs/jwt'
 import * as task from '@midwayjs/task'
+import * as passport from '@midwayjs/passport'
 
 import cors from '@koa/cors'
-import koaJwt from 'koa-jwt'
-
 import { join } from 'path'
+
 import logger from './middleware/logger'
 import error from './middleware/error'
-import config from './config/config.default'
-import { HelloService } from './task'
+import { JwtPassportMiddleware } from './middleware/jwt'
 
 /**
  * setup midway server
@@ -25,7 +24,8 @@ export default createConfiguration({
     redis,
     Koa,
     jwt,
-    swagger,
+    passport,
+    // swagger,
     task,
     // {
     //   component: swagger,
@@ -35,36 +35,12 @@ export default createConfiguration({
       middleware: [
         logger,
         error,
-        koaJwt(config.jwt).unless({
-          path: [
-            '/api/user/login',
-            '/api/user/logout',
-            /^\/public/,
-            // '/api/user/create',
-            // '/api/task/create',
-          ],
-        }),
+        JwtPassportMiddleware,
         cors({ origin: '*', credentials: true, keepHeadersOnError: true }),
       ],
     }),
   ],
-  importConfigs: [
-    {
-      default: {
-        keys: 'session_keys',
-        midwayLogger: {
-          default: {
-            level: 'debug',
-          },
-        },
-        coreLogger: {
-          level: 'debug',
-        },
-        logger: {},
-      },
-    },
-    join(__dirname, 'config'),
-  ],
+  importConfigs: [join(__dirname, 'config')],
   /* eslint-disable @typescript-eslint/no-unused-vars */
   onReady(container, app): void {
     console.log('onReady')

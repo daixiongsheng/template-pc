@@ -1,15 +1,18 @@
-import { CacheManager } from '@midwayjs/cache'
-import { Api, Get, Params, Query, useContext, useInject } from '@midwayjs/hooks'
-import { RedisService } from '@midwayjs/redis'
-import type { Context } from '@midwayjs/koa'
-import fetch from 'isomorphic-unfetch'
+import { Api, ApiConfig, Get, Params, Query, useContext } from '@midwayjs/hooks'
+import { Context } from '@midwayjs/koa'
 import { prisma } from './prisma'
 import { error, success, successPage } from './utils/response'
+
+// File Level Middleware
+export const config: ApiConfig = {
+  // middleware: [JwtPassportMiddleware],
+}
 
 export const getBannerByType = Api(
   Get('/api/banner/get_by_type/:type'),
   Query<{ page: string; size: string }>(),
   Params<{ type: string }>(),
+  // Middleware(JwtPassportMiddleware),
   async () => {
     const ctx = useContext<Context>()
     const { page = 1, size = 10 } = ctx.query
@@ -18,7 +21,7 @@ export const getBannerByType = Api(
     const book = await prisma.banner.findMany({
       select: { type },
     })
-    return successPage(book, size, page, total)
+    return successPage(book, +size, +page, total)
   }
 )
 
@@ -46,6 +49,6 @@ export const getBannerPage = Api(
     const book = await prisma.banner.findMany({
       skip: (+page - 1) * +size,
     })
-    return successPage(book, size, page, total)
+    return successPage(book, +size, +page, total)
   }
 )

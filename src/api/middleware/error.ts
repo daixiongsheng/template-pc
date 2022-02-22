@@ -8,19 +8,15 @@ const errorMiddleware: HooksMiddleware = async (next) => {
     console.error(err.message)
     const ctx = useContext<Context>()
     let msg = '服务器错误'
-    let code = -1
-    if (ctx.status === 401 || err.message?.includes('Authentication Error')) {
-      code = 401
-      msg = '登录信息已失效，请重新登录'
-    }
-    if (ctx.status === 404) {
-      code = 404
-      msg = 'Not Found'
-    } else {
-      code = ctx.status
+    switch (err.status) {
+      case 401:
+        msg = '登录信息已失效，请重新登录'
+        break
+      case 404:
+        msg = 'Not Found'
     }
     ctx.status = 200
-    ctx.body = error(msg, code)
+    ctx.body = error(msg, err.status)
   })
 }
 

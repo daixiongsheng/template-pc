@@ -29,6 +29,7 @@ import {
 } from './utils/user'
 import { randomExpire } from './utils'
 import { UserInfo } from '../typings/global'
+import { TokenPayload } from './strategy/jwt.strategy'
 
 const middleware: HooksMiddleware = async (next) => {
   await next()
@@ -64,12 +65,10 @@ export const login = Api(
       id: user.id,
     }
     const {
-      jwt: { secret, maxAge },
+      jwt: { maxAge },
     } = useConfig()
     const jwt = await useInject(JwtService)
-    const token = await jwt.sign(info, secret, {
-      expiresIn: maxAge,
-    })
+    const token = await jwt.sign(info)
     ctx.cookies.set('token', token)
     ;(async () => {
       const redis = await useInject(RedisService)
@@ -139,8 +138,7 @@ export async function useUid(): Promise<number> {
   } = useConfig()
   const token = ctx.cookies.get('token') || ctx.get('token')
   const jwt = await useInject(JwtService)
-  const user = (await jwt.verify(token, secret)) as JwtPayload as JwtPayload &
-    User
+  const user = (await jwt.verify(token, secret)) as JwtPayload as TokenPayload
   return user.id
 }
 
@@ -151,14 +149,11 @@ export async function useUser(id?: number): Promise<User> {
 
 export const logout = Api(Post('/api/user/logout'), async () => {
   const ctx = useContext<Context>()
-  const {
-    jwt: { secret },
-  } = useConfig()
   const token = ctx.cookies.get('token') || ctx.get('token')
   if (token) {
     ;(async () => {
       const jwt = await useInject(JwtService)
-      const payload = (await jwt.verify(token, secret)) as JwtPayload
+      const payload = (await jwt.verify(token)) as JwtPayload
       const redis = await useInject(RedisService)
       redis.del(getTokenKey(payload.id))
     })()
