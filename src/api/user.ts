@@ -29,7 +29,6 @@ import {
 } from './utils/user'
 import { randomExpire } from './utils'
 import { UserInfo } from '../typings/global'
-// import { ApiProperty, SwaggerMiddleware } from '@midwayjs/swagger'
 
 const middleware: HooksMiddleware = async (next) => {
   await next()

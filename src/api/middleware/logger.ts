@@ -1,7 +1,9 @@
+import { HooksMiddleware } from '@midwayjs/hooks-core'
 import { Context } from '@midwayjs/koa'
 import { useContext } from '@midwayjs/hooks'
 import colors from 'colors'
-const logger = async (next: any) => {
+
+const logger: HooksMiddleware = async (next) => {
   const ctx = useContext<Context>()
   const { body = {} } = ctx.request
   const hasData = Object.keys(body).length > 0
