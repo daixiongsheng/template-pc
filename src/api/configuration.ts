@@ -6,6 +6,7 @@ import * as swagger from '@midwayjs/swagger'
 import * as jwt from '@midwayjs/jwt'
 import * as task from '@midwayjs/task'
 import * as passport from '@midwayjs/passport'
+import * as upload from '@midwayjs/upload'
 
 import cors from '@koa/cors'
 import { join } from 'path'
@@ -25,6 +26,7 @@ export default createConfiguration({
     Koa,
     jwt,
     passport,
+    upload,
     // swagger,
     task,
     // {

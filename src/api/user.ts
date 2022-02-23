@@ -10,11 +10,11 @@ import {
   Get,
   ApiConfig,
 } from '@midwayjs/hooks'
+import { CacheManager } from '@midwayjs/cache'
 import { JwtService } from '@midwayjs/jwt'
 import { Gender, User } from '@prisma/client'
 import { JwtPayload } from 'jsonwebtoken'
 import { Context } from '@midwayjs/koa'
-import { RedisService } from '@midwayjs/redis'
 import { HooksMiddleware } from '@midwayjs/hooks-core'
 import { z } from 'zod'
 
@@ -27,7 +27,7 @@ import {
   getUserKey,
   pureUser,
 } from './utils/user'
-import { randomExpire } from './utils'
+import { random } from './utils'
 import { UserInfo } from '../typings/global'
 import { TokenPayload } from './strategy/jwt.strategy'
 
@@ -64,31 +64,23 @@ export const login = Api(
     const info = {
       id: user.id,
     }
-    const {
-      jwt: { maxAge },
-    } = useConfig()
     const jwt = await useInject(JwtService)
     const token = await jwt.sign(info)
-    ctx.cookies.set('token', token)
     ;(async () => {
-      const redis = await useInject(RedisService)
-      redis.set(getTokenKey(user.id), token)
-      redis.pexpire(getTokenKey(user.id), maxAge)
+      const ttl = useConfig('cookies.maxAge')
+      const cache = await useInject(CacheManager)
+      cache.set(getTokenKey(user.id), token, { ttl })
     })()
+    ctx.cookies.set('token', token)
     return success({ token })
   }
 )
 
 async function findUser(id: number | string) {
   const userKey = getUserKey(id)
-  const redis = await useInject(RedisService)
+  const cache = await useInject(CacheManager)
   let user: User
-  const userJsonStr = await redis.get(userKey)
-  if (userJsonStr) {
-    try {
-      user = JSON.parse(userJsonStr) as User
-    } catch {}
-  }
+  user = await cache.get<User>(userKey)
   if (!user) {
     user = await prisma.user
       .findFirst({
@@ -101,8 +93,10 @@ async function findUser(id: number | string) {
   if (!user) {
     return null
   }
-  redis.set(userKey, JSON.stringify(user))
-  redis.expire(userKey, randomExpire())
+  const {
+    options: { ttl },
+  } = useConfig('cache')
+  cache.set<User>(userKey, user, { ttl: ttl + random(0, 10) })
   return user
 }
 
@@ -122,40 +116,34 @@ export const getById = Api(
   }
 )
 
+export const userUser = async (): Promise<User> => {
+  const uid = await useUid()
+  const user = await findUser(uid)
+  return user
+}
+
 export const getCurrentUserInfo = Api(
   Get('/api/user/get_current_user_info'),
   async () => {
-    const uid = await useUid()
-    const user = await findUser(uid)
-    return success<UserInfo>(pureUser(user))
+    return success<UserInfo>(pureUser(await userUser()))
   }
 )
 
 export async function useUid(): Promise<number> {
   const ctx = useContext<Context>()
-  const {
-    jwt: { secret },
-  } = useConfig()
   const token = ctx.cookies.get('token') || ctx.get('token')
   const jwt = await useInject(JwtService)
-  const user = (await jwt.verify(token, secret)) as JwtPayload as TokenPayload
+  const user = (await jwt.verify(token)) as JwtPayload as TokenPayload
   return user.id
-}
-
-export async function useUser(id?: number): Promise<User> {
-  id = id || (await useUid())
-  return await findUser(id)
 }
 
 export const logout = Api(Post('/api/user/logout'), async () => {
   const ctx = useContext<Context>()
-  const token = ctx.cookies.get('token') || ctx.get('token')
-  if (token) {
+  const user = await userUser()
+  if (user) {
     ;(async () => {
-      const jwt = await useInject(JwtService)
-      const payload = (await jwt.verify(token)) as JwtPayload
-      const redis = await useInject(RedisService)
-      redis.del(getTokenKey(payload.id))
+      const cache = await useInject(CacheManager)
+      cache.del(getTokenKey(user.id))
     })()
   }
   ctx.cookies.set('token', null)
