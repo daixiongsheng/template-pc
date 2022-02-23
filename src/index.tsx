@@ -6,6 +6,7 @@ import './i18n'
 import App from './app'
 import { handleRequest, handleResponse } from './middleware/handleRequest'
 import { BrowserRouter } from 'react-router-dom'
+import './socket'
 
 setupHttpClient({
   middleware: [handleRequest, handleResponse],
