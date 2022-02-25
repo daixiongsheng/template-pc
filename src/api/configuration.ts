@@ -13,6 +13,7 @@ import * as upload from '@midwayjs/upload'
 import * as socketio from '@midwayjs/socketio'
 import * as crossDomain from '@midwayjs/cross-domain'
 import * as grpc from '@midwayjs/grpc'
+import * as consul from '@midwayjs/consul'
 
 import { instrument } from '@socket.io/admin-ui'
 
@@ -41,6 +42,7 @@ export default createConfiguration({
     crossDomain,
     task,
     grpc,
+    consul,
     // {
     //   component: swagger,
     //   enabledEnvironment: ['local'],

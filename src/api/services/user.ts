@@ -23,10 +23,11 @@ export class UserService {
 
   async invoke(): Promise<any> {
     // 调用服务
+
     const result = await this.greeterService.sayHello().sendMessage({
       name: 'harry',
     })
-
+    console.log(result)
     // 返回结果
     return result
   }

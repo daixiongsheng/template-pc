@@ -15,19 +15,23 @@ const RedisDB = {
 }
 
 export default (appInfo: MidwayAppInfo): MidwayConfig => {
-  const dir = join(appInfo.appDir, 'src', 'api', 'rpc', 'proto')
+  const dir = join(appInfo.baseDir, 'rpc', 'proto')
 
   const pkgs = readdirSync(dir)
 
-  const services = pkgs.map((pkg) => ({
+  const provideServices = pkgs.map((pkg, i) => ({
+    url: `localhost:${7800 + i}`,
     protoPath: join(dir, pkg),
     package: basename(pkg, '.proto'),
   }))
   return {
     koa: {
       // 在hooks有问题
+      port: 7001,
       globalPrefix: '',
-      // http2: true,
+      hostname: '0.0.0.0',
+      // hostname: '10.211.55.13',
+      // http2: false,,
     },
     keys: 'midway-template-pc',
     cache: {
@@ -72,15 +76,12 @@ export default (appInfo: MidwayAppInfo): MidwayConfig => {
       },
     },
     upload: {
-      // mode: UploadMode, 默认为file，即上传到服务器临时目录，可以配置为 stream
-      // mode: 'file',
       mode: 'stream',
       fileSize: '10mb',
       tmpdir: join(tmpdir(), 'midway-upload-files'),
-      // cleanTimeout: number，上传的文件在临时目录中多久之后自动删除，默认为 5 分钟
       cleanTimeout: 5 * 60 * 1000,
     },
-    uplodaOutDir: join(process.cwd(), 'uplodas'),
+    uplodaOutDir: join(appInfo.appDir, 'uplodas'),
     socketIO: {
       port: 9001,
       cors: {
@@ -95,24 +96,41 @@ export default (appInfo: MidwayAppInfo): MidwayConfig => {
     cors: {
       credentials: false,
     },
-    grpcServer: {
-      services,
-    },
-    grpc: {
-      services: [
-        {
-          url: 'localhost:3000',
-          protoPath: join(
-            appInfo.appDir,
-            'src',
-            'api',
-            'rpc',
-            'proto',
-            'helloworld.proto'
-          ),
-          package: 'helloworld',
-        },
-      ],
+    // 本地提供的服务
+    // grpcServer: {
+    //   url: '0.0.0.0:7788',
+    //   services: provideServices,
+    // },
+    // 可以调用的rpc服务
+    // grpc: {
+    //   services: [
+    //     {
+    //       url: 'mmmmp.local:7788',
+    //       protoPath: join(appInfo.baseDir, 'rpc/proto/helloworld.proto'),
+    //       package: 'helloworld',
+    //     },
+    //   ],
+    // },
+    consul: {
+      provider: {
+        // 注册本服务
+        register: true,
+        // 应用正常下线反注册
+        deregister: true,
+        // consul server 主机
+        // host: 'consul', // 此处修改 consul server 的地址
+        host: 'consul', // 此处修改 consul server 的地址
+        // consul server 端口
+        port: '8500', // 端口也需要进行修改
+        strategy: 'random',
+      },
+      service: {
+        address: 'mac', // 此处是当前这个 midway 应用的地址
+        port: 7001, // midway应用的端口
+        tags: ['tag1', 'tag2'], // 做泳道隔离等使用
+        name: 'midway-template-pc',
+        // others consul service definition
+      },
     },
     passport: {
       session: false,
