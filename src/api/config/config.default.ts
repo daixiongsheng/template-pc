@@ -29,8 +29,8 @@ export default (appInfo: MidwayAppInfo): MidwayConfig => {
       // 在hooks有问题
       port: 7001,
       globalPrefix: '',
+      // hostname: 'all',
       hostname: '0.0.0.0',
-      // hostname: '10.211.55.13',
       // http2: false,,
     },
     keys: 'midway-template-pc',
@@ -97,10 +97,10 @@ export default (appInfo: MidwayAppInfo): MidwayConfig => {
       credentials: false,
     },
     // 本地提供的服务
-    // grpcServer: {
-    //   url: '0.0.0.0:7788',
-    //   services: provideServices,
-    // },
+    grpcServer: {
+      url: '0.0.0.0:7788',
+      services: provideServices,
+    },
     // 可以调用的rpc服务
     // grpc: {
     //   services: [
@@ -119,14 +119,14 @@ export default (appInfo: MidwayAppInfo): MidwayConfig => {
         deregister: true,
         // consul server 主机
         // host: 'consul', // 此处修改 consul server 的地址
-        host: 'consul', // 此处修改 consul server 的地址
+        host: 'consul100', // 此处修改 consul server 的地址
         // consul server 端口
         port: '8500', // 端口也需要进行修改
         strategy: 'random',
       },
       service: {
         address: 'mac', // 此处是当前这个 midway 应用的地址
-        port: 7001, // midway应用的端口
+        port: 7788, // midway应用的端口
         tags: ['tag1', 'tag2'], // 做泳道隔离等使用
         name: 'midway-template-pc',
         // others consul service definition
