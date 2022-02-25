@@ -8,7 +8,6 @@ import {
   OnWSDisConnection,
 } from '@midwayjs/decorator'
 import { Context } from '@midwayjs/socketio'
-
 @Provide()
 @WSController('/')
 export class HelloSocketController {
@@ -24,6 +23,7 @@ export class HelloSocketController {
   @WSEmit('myEventResult')
   async gotMyMessage(payload: any): Promise<{ name: string }> {
     console.log(payload)
+    this.ctx.broadcast.emit('BroadCast', payload)
     return { name: 'harry' }
   }
 

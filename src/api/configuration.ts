@@ -10,7 +10,6 @@ import * as jwt from '@midwayjs/jwt'
 import * as task from '@midwayjs/task'
 import * as passport from '@midwayjs/passport'
 import * as upload from '@midwayjs/upload'
-// import * as ws from '@midwayjs/ws'
 import * as socketio from '@midwayjs/socketio'
 import * as crossDomain from '@midwayjs/cross-domain'
 import * as grpc from '@midwayjs/grpc'
@@ -23,7 +22,6 @@ import { join } from 'path'
 import logger from './middleware/logger'
 import error from './middleware/error'
 import { JwtPassportMiddleware } from './middleware/jwt'
-import { HelloSocketController } from './socket/hello'
 
 /**
  * setup midway server
@@ -31,18 +29,18 @@ import { HelloSocketController } from './socket/hello'
 
 export default createConfiguration({
   imports: [
+    Koa,
     cache,
     redis,
-    Koa,
     jwt,
     passport,
     upload,
     // ws,
     socketio,
-    grpc,
     // swagger,
     crossDomain,
     task,
+    grpc,
     // {
     //   component: swagger,
     //   enabledEnvironment: ['local'],
@@ -51,7 +49,7 @@ export default createConfiguration({
       middleware: [
         logger,
         error,
-        JwtPassportMiddleware as unknown as HooksMiddleware,
+        JwtPassportMiddleware as any as HooksMiddleware,
         // cors({ origin: '*', credentials: true, keepHeadersOnError: true }),
       ],
     }),
@@ -68,10 +66,7 @@ export default createConfiguration({
     console.log('onConfigLoad')
   },
   async onServerReady(container, app): Promise<void> {
-    const mfs = await container.getAsync<MidwayFrameworkService>(
-      MidwayFrameworkService,
-      [container]
-    )
+    const mfs = await container.getAsync(MidwayFrameworkService)
     const sio = mfs.getFramework('socketIO')
     instrument(sio.app, {
       auth: false,
