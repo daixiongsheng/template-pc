@@ -14,6 +14,8 @@ import * as socketio from '@midwayjs/socketio'
 import * as crossDomain from '@midwayjs/cross-domain'
 import * as grpc from '@midwayjs/grpc'
 import * as consul from '@midwayjs/consul'
+import * as rabbitmq from '@midwayjs/rabbitmq'
+import * as prometheus from '@midwayjs/prometheus'
 
 import { instrument } from '@socket.io/admin-ui'
 
@@ -43,6 +45,8 @@ export default createConfiguration({
     task,
     grpc,
     consul,
+    rabbitmq,
+    prometheus,
     // {
     //   component: swagger,
     //   enabledEnvironment: ['local'],
@@ -68,9 +72,9 @@ export default createConfiguration({
     console.log('onConfigLoad')
   },
   async onServerReady(container, app): Promise<void> {
-    const mfs = await container.getAsync(MidwayFrameworkService)
-    const sio = mfs.getFramework('socketIO')
-    instrument(sio.app, {
+    const sf = await container.getAsync(socketio.Framework)
+    // const sio = mfs.getFramework('socketIO')
+    instrument(sf.app, {
       auth: false,
       namespaceName: '/admin',
     })

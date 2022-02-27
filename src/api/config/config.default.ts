@@ -57,6 +57,9 @@ export default (appInfo: MidwayAppInfo): MidwayConfig => {
       tokenKey: 'token',
       expiresIn: maxAge / 1000,
     },
+    passport: {
+      session: false,
+    },
     cookies: {
       httpOnly: true,
       path: '/',
@@ -132,8 +135,16 @@ export default (appInfo: MidwayAppInfo): MidwayConfig => {
         // others consul service definition
       },
     },
-    passport: {
-      session: false,
+    rabbitmq: {
+      url: 'amqp://rabbitmq100:5672',
+    },
+    prometheus: {
+      labels: {
+        APP_NAME: 'demo_project',
+      },
+    },
+    rabbitMQServer: {
+      url: 'amqp://rabbitmq100:5672',
     },
   }
 }
