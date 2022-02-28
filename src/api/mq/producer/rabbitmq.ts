@@ -47,7 +47,9 @@ export class RabbitmqService {
   }
 
   async publish(): Promise<void> {
-    this.channelWrapper.publish('logs', '', random().toString())
+    const m = random().toString()
+    console.log('publish msg:', m)
+    this.channelWrapper.publish('logs', '', m)
   }
 
   @Destroy()
