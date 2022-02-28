@@ -1,6 +1,5 @@
 import { createConfiguration, hooks } from '@midwayjs/hooks'
 import { HooksMiddleware } from '@midwayjs/hooks-core'
-import { MidwayFrameworkService } from '@midwayjs/core'
 
 import * as Koa from '@midwayjs/koa'
 import * as cache from '@midwayjs/cache'
@@ -19,7 +18,6 @@ import * as prometheus from '@midwayjs/prometheus'
 
 import { instrument } from '@socket.io/admin-ui'
 
-import cors from '@koa/cors'
 import { join } from 'path'
 
 import logger from './middleware/logger'
@@ -38,7 +36,6 @@ export default createConfiguration({
     jwt,
     passport,
     upload,
-    // ws,
     socketio,
     // swagger,
     crossDomain,
@@ -56,7 +53,6 @@ export default createConfiguration({
         logger,
         error,
         JwtPassportMiddleware as any as HooksMiddleware,
-        // cors({ origin: '*', credentials: true, keepHeadersOnError: true }),
       ],
     }),
   ],
