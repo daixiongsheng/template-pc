@@ -26,12 +26,40 @@ export default (appInfo: MidwayAppInfo): MidwayConfig => {
   }))
   return {
     koa: {
-      // 在hooks有问题
       port: 7001,
+      // 在hooks有问题
       globalPrefix: '',
       // hostname: 'all',
       hostname: '0.0.0.0',
-      // http2: false,,
+      // http2: false,
+    },
+    midwayLogger: {
+      default: {
+        dir: join(appInfo.appDir, 'logs'),
+        maxSize: '10m',
+        maxFiles: '7d',
+        consoleLevel: 'all',
+        // level: 'all',
+      },
+      clients: {
+        coreLogger: {
+          // level: 'all',
+          // consoleLevel: 'warn',
+
+          consoleLevel: 'all',
+        },
+        appLogger: {
+          level: 'all',
+          // consoleLevel: 'warn',
+          consoleLevel: 'all',
+          // contextFormat: (info) => {
+          //   const ctx = info.ctx
+          //   return `${info.timestamp} ${info.LEVEL} ${info.pid} [${
+          //     Date.now() - ctx.startTime
+          //   }ms ${ctx.method}] ${info.message}`
+          // },
+        },
+      },
     },
     keys: 'midway-template-pc',
     cache: {

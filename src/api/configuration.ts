@@ -59,15 +59,16 @@ export default createConfiguration({
   importConfigs: [join(__dirname, 'config')],
   /* eslint-disable @typescript-eslint/no-unused-vars */
   onReady(container, app): void {
-    console.log('onReady')
+    app.getLogger().info('onReady')
   },
   onStop(container, app): void {
-    console.log('onStop')
+    app.getLogger().info('onStop')
   },
   async onConfigLoad(container, app): Promise<void> {
-    console.log('onConfigLoad')
+    app.getLogger().info('onConfigLoad')
   },
   async onServerReady(container, app): Promise<void> {
+    app.getLogger().info('onServerReady')
     const sf = await container.getAsync(socketio.Framework)
     // const sio = mfs.getFramework('socketIO')
     instrument(sf.app, {

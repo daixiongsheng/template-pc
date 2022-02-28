@@ -41,98 +41,92 @@ export class HelloTask {
   })
   async test(): Promise<void> {
     console.log('test', random())
-    // this.invoke()
-    // this.home()
-    // this.config()
-    // this.vite()
-    this.mq()
-    this.consu()
   }
 
-  consu(): void {
-    this.rabbitmqService.consumer('abc')
-  }
+  // consu(): void {
+  //   this.rabbitmqService.consumer('abc')
+  // }
 
-  mq(): void {
-    this.rabbitmqService.sendToQueue('abc', { hello: 'world' })
-  }
+  // mq(): void {
+  //   this.rabbitmqService.sendToQueue('abc', { hello: 'world' })
+  // }
 
-  async initConsumer(): Promise<void> {
-    if (!this.consumer) {
-      const service = await this.balancerService
-        .getServiceBalancer()
-        .select('midway-template-pc')
-      // output
-      const { ServicePort, ServiceAddress } = service
-      console.log(ServicePort, ServiceAddress)
-      console.log(this.app.getAppDir())
-      // this.consumer =
-      const s = (await createGRPCConsumer({
-        url: `${ServiceAddress}:${ServicePort}`,
-        protoPath: join(
-          this.app.getBaseDir(),
-          'rpc',
-          'proto',
-          'helloworld.proto'
-        ),
-        package: 'helloworld',
-      })) as helloworld.GreeterClient
-      s.sayHello().sendMessage({ name: 'from consul' })
-    }
-  }
+  // async initConsumer(): Promise<void> {
+  //   if (!this.consumer) {
+  //     const service = await this.balancerService
+  //       .getServiceBalancer()
+  //       .select('midway-template-pc')
+  //     // output
+  //     const { ServicePort, ServiceAddress } = service
+  //     console.log(ServicePort, ServiceAddress)
+  //     console.log(this.app.getAppDir())
+  //     // this.consumer =
+  //     const s = (await createGRPCConsumer({
+  //       url: `${ServiceAddress}:${ServicePort}`,
+  //       protoPath: join(
+  //         this.app.getBaseDir(),
+  //         'rpc',
+  //         'proto',
+  //         'helloworld.proto'
+  //       ),
+  //       package: 'helloworld',
+  //     })) as helloworld.GreeterClient
+  //     s.sayHello().sendMessage({ name: 'from consul' })
+  //   }
+  // }
 
-  async vite(): Promise<void> {
-    this.initConsumer()
-  }
+  // async vite(): Promise<void> {
+  //   this.initConsumer()
+  // }
 
-  async config(): Promise<void> {
-    await this.consul.kv.set('name', JSON.stringify({ name: 'hello' }))
-  }
+  // async config(): Promise<void> {
+  //   await this.consul.kv.set('name', JSON.stringify({ name: 'hello' }))
+  // }
 
-  async http(): Promise<void> {
-    const result = await client.request(
-      'http://127.0.0.1:3000/api/banner/get_by_type/1',
-      {
-        method: 'GET',
-        dataType: 'json',
-        contentType: 'json',
-        // headers: {
-        //   token:
-        //     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1NTQ4OTY4LCJleHAiOjE2NDYxNTM3Njh9.LNIxX4Dz15EOh39uzQP3ao4bAF5a3TSazcCOTXHi6KE',
-        // },
-      }
-    )
-    console.log(result.data)
-  }
+  // async http(): Promise<void> {
+  //   const result = await client.request(
+  //     'http://127.0.0.1:3000/api/banner/get_by_type/1',
+  //     {
+  //       method: 'GET',
+  //       dataType: 'json',
+  //       contentType: 'json',
+  //       // headers: {
+  //       //   token:
+  //       //     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1NTQ4OTY4LCJleHAiOjE2NDYxNTM3Njh9.LNIxX4Dz15EOh39uzQP3ao4bAF5a3TSazcCOTXHi6KE',
+  //       // },
+  //     }
+  //   )
+  //   console.log(result.data)
+  // }
 
-  async home(): Promise<void> {
-    const service = await this.balancerService
-      .getServiceBalancer()
-      .select('midway-template-pc')
-    // output
-    console.log(service)
-    // ...
-  }
+  // async home(): Promise<void> {
+  //   const service = await this.balancerService
+  //     .getServiceBalancer()
+  //     .select('midway-template-pc')
+  //   // output
+  //   console.log(service)
+  //   // ...
+  // }
 
-  async invoke(): Promise<any> {
-    // 获取服务
-    // 获取服务
-    const greeterService =
-      this.grpcClients.getService<helloworld.GreeterClient>(
-        'helloworld.Greeter'
-      )
+  // async invoke(): Promise<any> {
+  //   // 获取服务
+  //   // 获取服务
+  //   const greeterService =
+  //     this.grpcClients.getService<helloworld.GreeterClient>(
+  //       'helloworld.Greeter'
+  //     )
 
-    // 调用服务
-    const result = await greeterService
-      .sayHello()
-      .sendMessage({
-        name: 'harry',
-      })
-      .catch((e) => {
-        console.error(e.message)
-      })
-    console.log(result)
-    // 返回结果
-    // this.userService.invoke()
-  }
+  //   // 调用服务
+  //   const result = await greeterService
+  //     .sayHello()
+  //     .sendMessage({
+  //       name: 'harry',
+  //     })
+  //     .catch((e) => {
+  //       console.error(e.message)
+  //     })
+  //   console.log(result)
+  //   // 返回结果
+  //   // this.userService.invoke()
+  // }
 }
