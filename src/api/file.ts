@@ -14,7 +14,7 @@ export const saveFile = (stream: Readable, path: string): void => {
   stream.pipe(out)
 }
 
-export const uploda = Api(Post('/api/file/upload'), async () => {
+export const upload = Api(Post('/api/file/upload'), async () => {
   const ctx = useContext<Context>()
   const outdir = useConfig('uplodaOutDir')
   for (const { filename, data } of ctx.files) {
