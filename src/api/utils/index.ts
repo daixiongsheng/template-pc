@@ -8,3 +8,9 @@ export function random(min?: number, max?: number): number {
 export function randomExpire(min = 30 * 24 * 3600): number {
   return min + random(10 * 3600)
 }
+
+export function sleep(s: number): Promise<void> {
+  return new Promise((resovle) => {
+    setTimeout(resovle, s)
+  })
+}
