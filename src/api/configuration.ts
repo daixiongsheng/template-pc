@@ -37,7 +37,7 @@ export default createConfiguration({
     passport,
     upload,
     socketio,
-    // swagger,
+    swagger,
     crossDomain,
     task,
     grpc,

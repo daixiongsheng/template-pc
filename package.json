@@ -29,6 +29,7 @@
     "@midwayjs/redis": "^2.14.6",
     "@midwayjs/rpc": "^3.0.0-rc.10",
     "@midwayjs/socketio": "^3.0.11",
+    "@midwayjs/static-file": "^3.0.11",
     "@midwayjs/swagger": "^3.0.11",
     "@midwayjs/task": "^3.0.11",
     "@midwayjs/upload": "^3.0.11",
