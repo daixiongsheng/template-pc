@@ -82,7 +82,6 @@ export default (appInfo: MidwayAppInfo): MidwayConfig => {
     },
     jwt: {
       secret: 'XF4cUwMrdyuxnzYeoHkA3smhK1A0eQYR',
-      tokenKey: 'token',
       expiresIn: maxAge / 1000,
     },
     passport: {

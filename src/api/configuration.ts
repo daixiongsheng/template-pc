@@ -1,5 +1,4 @@
 import { createConfiguration, hooks } from '@midwayjs/hooks'
-import { HooksMiddleware } from '@midwayjs/hooks-core'
 
 import * as Koa from '@midwayjs/koa'
 import * as cache from '@midwayjs/cache'
@@ -24,10 +23,6 @@ import logger from './middleware/logger'
 import error from './middleware/error'
 import { JwtPassportMiddleware } from './middleware/jwt'
 
-/**
- * setup midway server
- */
-
 export default createConfiguration({
   imports: [
     Koa,
@@ -49,17 +44,14 @@ export default createConfiguration({
     //   enabledEnvironment: ['local'],
     // },
     hooks({
-      middleware: [
-        logger,
-        error,
-        JwtPassportMiddleware as any as HooksMiddleware,
-      ],
+      middleware: [logger, error],
     }),
   ],
   importConfigs: [join(__dirname, 'config')],
   /* eslint-disable @typescript-eslint/no-unused-vars */
   onReady(container, app): void {
     app.getLogger().info('onReady')
+    app.useMiddleware(JwtPassportMiddleware)
   },
   onStop(container, app): void {
     app.getLogger().info('onStop')

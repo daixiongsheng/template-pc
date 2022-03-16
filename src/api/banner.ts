@@ -1,18 +1,12 @@
-import { Api, ApiConfig, Get, Params, Query, useContext } from '@midwayjs/hooks'
+import { Api, Get, Params, Query, useContext } from '@midwayjs/hooks'
 import { Context } from '@midwayjs/koa'
 import { prisma } from './prisma'
 import { error, success, successPage } from './utils/response'
-
-// File Level Middleware
-export const config: ApiConfig = {
-  // middleware: [JwtPassportMiddleware],
-}
 
 export const getBannerByType = Api(
   Get('/api/banner/get_by_type/:type'),
   Query<{ page: string; size: string }>(),
   Params<{ type: string }>(),
-  // Middleware(JwtPassportMiddleware),
   async () => {
     const ctx = useContext<Context>()
     const { page = 1, size = 10 } = ctx.query
