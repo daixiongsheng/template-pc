@@ -25,6 +25,7 @@
     ],
     "outDir": "./dist",
   },
+  // ,
   "include": [
     "./src",
     "dist/host.js"

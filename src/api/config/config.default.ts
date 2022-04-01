@@ -72,6 +72,7 @@ export default (appInfo: MidwayAppInfo): MidwayConfig => {
         keyPrefix: 'cache:',
         ttl: 100,
       },
+      ttl: 100,
     },
     redis: {
       client: {
@@ -111,7 +112,7 @@ export default (appInfo: MidwayAppInfo): MidwayConfig => {
       tmpdir: join(tmpdir(), 'midway-upload-files'),
       cleanTimeout: 5 * 60 * 1000,
     },
-    uplodaOutDir: join(appInfo.appDir, 'uplodas'),
+    uploadOutDir: join(appInfo.appDir, 'uplodas'),
     socketIO: {
       port: 9001,
       cors: {

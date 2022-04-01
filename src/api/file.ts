@@ -16,7 +16,7 @@ export const saveFile = (stream: Readable, path: string): void => {
 
 export const upload = Api(Post('/api/file/upload'), async () => {
   const ctx = useContext<Context>()
-  const outdir = useConfig('uplodaOutDir')
+  const outdir = useConfig('uploadOutDir')
   for (const { filename, data } of ctx.files) {
     const p = join(outdir, filename)
     saveFile(data as Readable, p)
