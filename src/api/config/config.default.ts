@@ -10,7 +10,7 @@ const maxAge = 7 * 24 * 3600 * 1000
 const RedisDB = {
   cache: 1,
   default: 0,
-  taks: 2,
+  task: 2,
   socket: 3,
 }
 
@@ -106,13 +106,15 @@ export default (appInfo: MidwayAppInfo): MidwayConfig => {
       redis: {
         port: 6379,
         host: 'redis100',
-        db: RedisDB.taks,
+        db: RedisDB.task,
       },
       prefix: 'midway-template-pc',
       defaultJobOptions: {
         repeat: {
           tz: 'Asia/Shanghai',
         },
+        removeOnComplete: true,
+        removeOnFail: true,
       },
     },
     upload: {
