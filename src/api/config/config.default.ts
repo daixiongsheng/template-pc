@@ -14,15 +14,6 @@ const RedisDB = {
   socket: 3,
 }
 
-export const db = {
-  leader: {
-    URL: 'mysql://root:123456@mysql100master:3306/test',
-  },
-  follower: {
-    URL: 'mysql://root:123456@mysql100follower:3306/test',
-  },
-}
-
 export default (appInfo: MidwayAppInfo): MidwayConfig => {
   const dir = join(appInfo.baseDir, 'rpc', 'proto')
 

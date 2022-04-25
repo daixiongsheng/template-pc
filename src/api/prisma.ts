@@ -3,7 +3,14 @@ import { format } from 'sql-formatter'
 import { highlight } from 'sql-highlight'
 import colors from 'colors'
 
-import { db } from './config/config.default'
+const db = {
+  leader: {
+    URL: 'mysql://root:123456@mysql100master:3306/test',
+  },
+  follower: {
+    URL: 'mysql://root:123456@mysql100follower:3306/test',
+  },
+}
 
 export const prisma = new PrismaClient({
   log: [{ level: 'query', emit: 'event' }],
