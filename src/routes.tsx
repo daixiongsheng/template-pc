@@ -26,25 +26,24 @@ export const adminRoutes: RouteObject[] = [
     ],
   },
   {
-    path: 'member',
-    element: load(() => import('./pages/dashboard')),
+    path: 'statute',
     children: [
       {
-        path: 'info',
-        element: load(() => import('./pages/dashboard')),
-        children: [],
-      },
-      {
-        path: 'find',
-        element: load(() => import('./pages/dashboard')),
+        path: 'statute_add',
+        element: load(() => import('./pages/statute_add')),
         children: [],
       },
     ],
   },
   {
-    path: 'cache',
-    element: load(() => import('./pages/dashboard')),
-    children: [],
+    path: 'clause',
+    children: [
+      {
+        path: 'clause_add',
+        element: load(() => import('./pages/clause_add')),
+        children: [],
+      },
+    ],
   },
 ]
 

@@ -150,25 +150,28 @@ export const logout = Api(Post('/api/user/logout'), async () => {
   return success()
 })
 
-export const create = Api(Post('/api/user/create'), async () => {
-  const ctx = useContext<Context>()
-  const { username, password } = ctx.request.body
-  const u = await prisma.user.count({
-    where: {
-      username: {
-        equals: username,
+export const createUser = Api(
+  Post('/api/user/create'),
+  async (uname?: string, passwd?: string) => {
+    const ctx = useContext<Context>()
+    const { username = uname, password = passwd } = ctx.request.body
+    const u = await prisma.user.count({
+      where: {
+        username: {
+          equals: username,
+        },
       },
-    },
-  })
-  if (u) {
-    return error(`${username} is exists!`)
+    })
+    if (u) {
+      return error(`${username} is exists!`)
+    }
+    const user = await prisma.user.create({
+      data: {
+        username,
+        password: generatePassword(password),
+        gender: 1,
+      },
+    })
+    return success(pureUser(user))
   }
-  const user = await prisma.user.create({
-    data: {
-      username,
-      password: generatePassword(password),
-      gender: 1,
-    },
-  })
-  return success(pureUser(user))
-})
+)

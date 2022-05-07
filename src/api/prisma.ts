@@ -39,7 +39,12 @@ prisma.$use((params, next) => {
 })
 ;[dbw, dbr, prisma].forEach((con) =>
   con.$on('query', (e) => {
-    const params = JSON.parse(e.params) as string[]
+    let params: string[] = []
+    try {
+      params = JSON.parse(e.params)
+    } catch {
+      params = [e.params]
+    }
     console.log(
       colors.blue(
         colors.bgYellow('=============== Query Begin ===============')

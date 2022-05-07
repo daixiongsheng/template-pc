@@ -9,6 +9,7 @@ const unlessPath: (string | RegExp)[] = [
   /\/api\/banner/,
   /\/public/,
   '/api/user/login',
+  '/api/user/create',
 ]
 
 @Middleware()

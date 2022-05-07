@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Form, Input, Button, message } from 'antd'
 import MyHeader from '../components/MyHeader'
 import { useTranslation } from 'react-i18next'
-import { login, logout } from '../api/user'
+import { login, logout, createUser } from '../api/user'
 import { useNavigate } from 'react-router'
 import { useSearchParams } from 'react-router-dom'
 
@@ -17,11 +17,30 @@ const Layout = styled.div`
   margin-top: 40px;
 `
 
-const Title = styled.div``
+const Title = styled.button`
+  width: 70px;
+  height: 32px;
+  line-height: 32px;
+  text-align: center;
+  font-size: 16px;
+  background-color: #788878;
+  color: #fff;
+  outline: none;
+  border: none;
+`
 
 export type LoginProps = {}
 
+const layout = {
+  labelCol: { span: 6, offset: 0 },
+  wrapperCol: { span: 16 },
+}
+const tailLayout = {
+  wrapperCol: { offset: 8, span: 32 },
+}
+
 const Login: React.FC = () => {
+  const [form] = Form.useForm()
   const { t } = useTranslation('login')
   const to = useNavigate()
   const [params] = useSearchParams()
@@ -40,7 +59,7 @@ const Login: React.FC = () => {
           logout().then(console.log)
         }}
       >
-        hello
+        logout
       </Title>
       <Layout>
         <Form
@@ -48,31 +67,39 @@ const Login: React.FC = () => {
           initialValues={{ remember: true }}
           onFinish={onFinish}
           autoComplete="off"
+          {...layout}
+          form={form}
         >
           <Form.Item
-            wrapperCol={{ span: 14 }}
-            labelCol={{ span: 8 }}
+            {...layout}
             label={t('username')}
             name="username"
             rules={[{ required: true, message: t('usernameError') }]}
           >
             <Input />
           </Form.Item>
-
           <Form.Item
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 14 }}
+            {...layout}
             label={t('password')}
             name="password"
             rules={[{ required: true, message: t('passwordError') }]}
           >
             <Input.Password />
           </Form.Item>
-          <Form.Item wrapperCol={{ offset: 8, span: 8 }}>
+          <Form.Item {...tailLayout}>
             <Button type="primary" htmlType="submit">
               {t('submit')}
             </Button>
-          </Form.Item>
+            <Button
+              onClick={() => {
+                const { username, password } = form.getFieldsValue()
+                createUser(username, password)
+              }}
+              type="primary"
+            >
+              {t('signUp')}
+            </Button>
+          </Form.Item>{' '}
         </Form>
       </Layout>
     </>

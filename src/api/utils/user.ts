@@ -1,4 +1,4 @@
-import { Gender, User } from '@prisma/client'
+import { User } from '@prisma/client'
 import md5 from 'js-md5'
 
 export function checkUser(
@@ -19,8 +19,15 @@ export function getUserKey(id: number | string): string {
 export function generatePassword(password: string): string {
   return md5(password)
 }
-export function nolmalizeGender(g: Gender): string {
-  return g === Gender.Male ? '男' : g === Gender.Famale ? '女' : ''
+
+enum Gender {
+  Female,
+  Male,
+  Unknown,
+}
+
+export function normalizeGender(g: number): string {
+  return Gender[g]
 }
 
 export function pureUser(
@@ -31,7 +38,7 @@ export function pureUser(
     id,
     realname,
     username,
-    gender: nolmalizeGender(gender),
+    gender: normalizeGender(gender),
     mobile,
   }
 }
