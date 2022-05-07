@@ -12,7 +12,7 @@ import {
 } from '@midwayjs/hooks'
 import { CacheManager } from '@midwayjs/cache'
 import { JwtService } from '@midwayjs/jwt'
-import { Gender, User } from '@prisma/client'
+import { User } from '@prisma/client'
 import { JwtPayload } from 'jsonwebtoken'
 import { Context } from '@midwayjs/koa'
 import { HooksMiddleware } from '@midwayjs/hooks-core'
@@ -167,7 +167,7 @@ export const create = Api(Post('/api/user/create'), async () => {
     data: {
       username,
       password: generatePassword(password),
-      gender: Gender.Male,
+      gender: 1,
     },
   })
   return success(pureUser(user))

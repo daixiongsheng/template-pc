@@ -1,38 +1,44 @@
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
 }
 
-enum Type {
-  Banner
-}
-
-model Banner {
+model Statute {
   id        Int      @id @default(autoincrement())
-  type      Type
+  // 标题
   title     String
-  link      String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@index([type, title])
-  @@map("banner")
+  clause Clause[]
+  @@index([title])
+  @@map("statute")
 }
 
-enum Status {
-  Enabled
-  Disabled
-  Deleted
-}
+model Clause {
+  id        Int      @id @default(autoincrement())
+  /// 编  第一编 总 则
+  part      String
+  /// 章  第一章
+  chapter   String
+  /// 条  第几条
+  item      Int
+  /// 内容 为了保护民事主体的合法权...
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-enum Gender {
-  Male
-  Famale
-  Unknown
+  statute   Statute @relation(fields: [statuteId], references: [id])
+  statuteId Int     @map("statute_id")
+
+  @@index([content])
+  @@map("clause")
 }
 
 model User {
@@ -40,9 +46,9 @@ model User {
   username  String
   password  String
   mobile    String?
-  status    Status   @default(Enabled)
+  status    Int      @default(1) // delete 0 enable 1 disable 2
   realname  String?
-  gender    Gender   @default(Unknown)
+  gender    Int      @default(2) // 0 F 1 M 2 U
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 

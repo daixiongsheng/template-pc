@@ -5,10 +5,10 @@ import colors from 'colors'
 
 const db = {
   leader: {
-    URL: 'mysql://root:123456@mysql100master:3306/test',
+    URL: 'mysql://root:123456@mysql100:3306/national_legal',
   },
   follower: {
-    URL: 'mysql://root:123456@mysql100follower:3306/test',
+    URL: 'mysql://root:123456@mysql100:3306/national_legal',
   },
 }
 
@@ -35,7 +35,6 @@ export const dbw = new PrismaClient({
 })
 
 prisma.$use((params, next) => {
-  // console.log(params);
   return next(params)
 })
 ;[dbw, dbr, prisma].forEach((con) =>

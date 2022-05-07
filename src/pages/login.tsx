@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { Form, Input, Button, message } from 'antd'
 import MyHeader from '../components/MyHeader'
 import { useTranslation } from 'react-i18next'
 import { login, logout } from '../api/user'
-import { useLocation, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 import { useSearchParams } from 'react-router-dom'
 
 const Layout = styled.div`
@@ -21,7 +21,7 @@ const Title = styled.div``
 
 export type LoginProps = {}
 
-const Login = () => {
+const Login: React.FC = () => {
   const { t } = useTranslation('login')
   const to = useNavigate()
   const [params] = useSearchParams()
