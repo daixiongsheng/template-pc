@@ -7,7 +7,7 @@ export const resources = {
       admin_cache: 'AppstoreOutlined',
     },
     translation: {
-      contactUs: 'Aoubt',
+      contactUs: 'About',
       home: 'Home',
     },
     login: {

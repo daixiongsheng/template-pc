@@ -36,6 +36,9 @@ const ClauseAdd: React.FC<ClauseAddProps> = () => {
   const [clause, setClause] = useState<Awaited<ReturnType<typeof getClauses>>>(
     []
   )
+
+  clause
+  // ^?
   console.log('update', clause)
   const update = useMemoizedFn(() => {
     getClauses().then(setClause)

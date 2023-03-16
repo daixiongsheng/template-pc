@@ -44,10 +44,9 @@ export const getClauses = Api(Get('/api/clause/get_list'), async () => {
 export const findClause = Api(
   Post('/api/clause/find'),
   async (content: string) => {
-    console.log(content, 'content')
-    const clause = await dbr.$queryRawUnsafe<
+    const clause = await dbr.$queryRaw<
       ({ statute_id: number; title: string } & Clause)[]
-    >(`
+    >`
     select
       clause.id,
       statute_id,
@@ -59,8 +58,8 @@ export const findClause = Api(
     from
       clause
       left join statute on clause.statute_id = statute.id
-    where content like '%${content}%'
-    `)
+    where content like ${'%' + content + '%'}
+    `
     return success(clause)
   }
 )
